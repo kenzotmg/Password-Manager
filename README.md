@@ -20,6 +20,7 @@ The project was created for learning purposes. Contribuitions are *greatly appre
 * [![Electron][Electron.js]][Electron-url]
 * [better-sqlite3-multiple-ciphers](https://github.com/m4heshd/better-sqlite3-multiple-ciphers)
 * [generate-password](https://github.com/brendanashworth/generate-password)
+* [electron-react-boilerplate](https://github.com/electron-react-boilerplate/electron-react-boilerplate)
 
 ## Roadmap
 

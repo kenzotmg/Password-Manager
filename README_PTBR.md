@@ -19,6 +19,7 @@ O projeto foi criado com o propósito principal de aprendizado. Contribuições 
 * [![Electron][Electron.js]][Electron-url]
 * [better-sqlite3-multiple-ciphers](https://github.com/m4heshd/better-sqlite3-multiple-ciphers)
 * [generate-password](https://github.com/brendanashworth/generate-password)
+* [electron-react-boilerplate](https://github.com/electron-react-boilerplate/electron-react-boilerplate)
 
 ## Ajustes e melhorias
 
