@@ -4,6 +4,8 @@
 
 
 <img src="initial_image.png" alt="password manager">
+<img src="passmanager1.png" alt="password manager">
+<img src="passmanager2.png" alt="password manager">
 
 # [README - PT/BR](README_PTBR.md)
 
