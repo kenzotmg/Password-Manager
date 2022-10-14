@@ -9,17 +9,9 @@
  * `./src/main.js` using webpack. This gives us some performance wins.
  */
 import path from 'path';
-import {
-	app,
-	BrowserWindow,
-	shell,
-	ipcMain,
-	Tray,
-	Menu,
-	nativeImage,
-} from 'electron';
-import { autoUpdater } from 'electron-updater';
-import log from 'electron-log';
+import { app, BrowserWindow, shell, ipcMain, Tray, Menu } from 'electron';
+/* import { autoUpdater } from 'electron-updater';
+import log from 'electron-log'; */
 import pass_generator from 'generate-password';
 import MenuBuilder from './menu';
 import DatabaseManager from './db';
@@ -28,13 +20,13 @@ import { resolveHtmlPath } from './util';
 let tray: Tray;
 let isQuiting = false;
 
-class AppUpdater {
+/* class AppUpdater {
 	constructor() {
 		log.transports.file.level = 'info';
 		autoUpdater.logger = log;
 		autoUpdater.checkForUpdatesAndNotify();
 	}
-}
+} */
 
 let mainWindow: BrowserWindow | null = null;
 
@@ -44,11 +36,11 @@ ipcMain.on('ipc-example', async (event, arg) => {
 	event.reply('ipc-example', msgTemplate('pong'));
 });
 
-ipcMain.handle('dialog:login', async (event, args) => {
+ipcMain.handle('dialog:login', async (_event, args) => {
 	return DatabaseManager.login(args.username, args.password);
 });
 
-ipcMain.handle('dialog:save-pass', async (event, args) => {
+ipcMain.handle('dialog:save-pass', async (_event, args) => {
 	return DatabaseManager.savePassword(
 		args.source,
 		args.username,
@@ -56,7 +48,15 @@ ipcMain.handle('dialog:save-pass', async (event, args) => {
 	);
 });
 
-ipcMain.handle('dialog:get-logo-path', (event, args) => {
+ipcMain.handle('dialog:delete-pass', async (_event, args) => {
+	return DatabaseManager.deletePassword(args.primary_key);
+});
+
+ipcMain.handle('dialog:edit-pass', async (_event, args) => {
+	return DatabaseManager.editPassword(args.primary_key, args.formData);
+});
+
+ipcMain.handle('dialog:get-logo-path', () => {
 	const RESOURCES_PATH = app.isPackaged
 		? path.join(process.resourcesPath, 'assets/logo.png')
 		: path.join(__dirname, '../../assets/logo.png');
@@ -64,7 +64,7 @@ ipcMain.handle('dialog:get-logo-path', (event, args) => {
 	return RESOURCES_PATH as string;
 });
 
-ipcMain.handle('dialog:gen-pass', async (event, args) => {
+ipcMain.handle('dialog:gen-pass', async (_event, args) => {
 	const password = pass_generator.generate({
 		length: args.length,
 		symbols: args.symbols,
@@ -75,9 +75,9 @@ ipcMain.handle('dialog:gen-pass', async (event, args) => {
 	return password;
 });
 
-ipcMain.on('dialog:retrieve-all-pass', (event, args) => {
+ipcMain.on('dialog:retrieve-all-pass', (event) => {
 	const passwords = DatabaseManager.retrieveAllPasswords();
-	event.reply('dialog:retrieve-all-pass', passwords || []);
+	event.reply('dialog:retrieve-all-pass', passwords);
 });
 
 if (process.env.NODE_ENV === 'production') {
@@ -151,7 +151,9 @@ const createWindow = async () => {
 	mainWindow.on('close', (e: Event) => {
 		if (!isQuiting) {
 			e.preventDefault();
-			mainWindow.hide();
+			if (mainWindow) {
+				mainWindow.hide();
+			}
 		}
 	});
 
@@ -208,7 +210,9 @@ app.whenReady()
 				{
 					label: 'Show App',
 					click() {
-						mainWindow.show();
+						if (mainWindow) {
+							mainWindow.show();
+						}
 					},
 				},
 				{

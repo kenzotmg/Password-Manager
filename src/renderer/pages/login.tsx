@@ -12,7 +12,7 @@ import KeySharpIcon from '@mui/icons-material/KeySharp';
 import IconButton from '@mui/material/IconButton';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import Constants from 'renderer/constants';
+import Constants from 'renderer/core/constants';
 import Avatar from '@mui/material/Avatar';
 import AlertTitle from '@mui/material/AlertTitle';
 import HelpOutlineSharpIcon from '@mui/icons-material/HelpOutlineSharp';

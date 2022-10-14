@@ -4,9 +4,9 @@ import {
 	Route,
 	Navigate,
 } from 'react-router-dom';
-import Login from './login/login';
-import Add from './add-password/add';
-import PassList from './password-list/pass-list';
+import Login from '../pages/login';
+import Add from '../pages/add';
+import PassList from '../pages/pass-list';
 import './App.css';
 import Constants from './constants';
 

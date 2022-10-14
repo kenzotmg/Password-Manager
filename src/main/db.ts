@@ -5,6 +5,8 @@ import Database from 'better-sqlite3-multiple-ciphers';
 import crypto from 'crypto';
 import path from 'path';
 import { app } from 'electron';
+import { PasswordFormData } from 'renderer/types/password-form-data';
+import { PasswordRecord } from '../renderer/types/password-record';
 
 let KEY: string;
 let conn: Database;
@@ -72,6 +74,45 @@ const DatabaseManager = {
 		}
 	},
 
+	deletePassword(pk: number) {
+		const stmt = conn.prepare(
+			'DELETE FROM passwords WHERE primary_key = ?'
+		);
+		try {
+			const info = stmt.run(pk);
+			if (info.changes >= 1) {
+				return true;
+			}
+			return false;
+		} catch (err) {
+			this.print(err);
+			return false;
+		}
+	},
+
+	editPassword(pk: number, data: PasswordFormData) {
+		const simpleCrypto = new SimpleCrypto(KEY);
+		const stmt = conn.prepare(
+			'UPDATE passwords SET source = ?, username = ?, password = ? WHERE primary_key = ?'
+		);
+		const encryptedPassword = simpleCrypto.encrypt(data.password);
+		try {
+			const info = stmt.run(
+				data.source,
+				data.username,
+				encryptedPassword,
+				pk
+			);
+			if (info.changes >= 1) {
+				return true;
+			}
+			return false;
+		} catch (err) {
+			this.print(err);
+			return false;
+		}
+	},
+
 	generateKey(username: string, password: string) {
 		const secret = username + password;
 		const hash = crypto.createHash('sha256').update(secret).digest('hex');
@@ -82,20 +123,19 @@ const DatabaseManager = {
 		const stmt = conn.prepare('SELECT * FROM passwords');
 		const cat = stmt.all();
 		const simpleCrypto = new SimpleCrypto(KEY);
+		const passwords: PasswordRecord[] = [];
 		if (cat.length >= 1) {
-			const passwords = [];
-			cat.forEach((item, index, arr) => {
-				const newObject = {
+			cat.forEach((item: PasswordRecord) => {
+				const newObject: PasswordRecord = {
 					primary_key: item.primary_key,
 					source: item.source,
 					username: item.username,
-					password: simpleCrypto.decrypt(item.password),
+					password: simpleCrypto.decrypt(item.password).toString(),
 				};
 				passwords.push(newObject);
 			});
-			return passwords;
 		}
-		return null;
+		return passwords;
 	},
 
 	login(username: string, password: string) {

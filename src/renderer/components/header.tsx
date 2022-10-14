@@ -3,7 +3,7 @@ import Stack from '@mui/material/Stack';
 import { useNavigate, useLocation } from 'react-router-dom';
 import FormatListBulletedSharpIcon from '@mui/icons-material/FormatListBulletedSharp';
 import LockSharpIcon from '@mui/icons-material/LockSharp';
-import Constants from 'renderer/constants';
+import Constants from 'renderer/core/constants';
 
 export default function Header() {
 	const navigate = useNavigate();
