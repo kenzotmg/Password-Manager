@@ -102,6 +102,8 @@ export default function PassCard(props: { data: PasswordRecord }) {
 			setAlertSeverity(errorSeverity);
 			setOpenSnackBar(true);
 		}
+
+		setOpenDeleteDialog(false);
 	};
 
 	return (
